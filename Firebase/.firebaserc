@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "biosignal-stream"
+  },
+  "targets": {
+    "biosignal-stream": {
+      "hosting": {
+        "dashboard": [
+          "biosignal-dashboard"
+        ],
+        "icu_sugery": [
+          "biosignal-icu-sugery"
+        ],
+        "home": [
+          "biosignal-stream"
+        ],
+        "signin": [
+          "biosignal-signin"
+        ]
+      }
+    }
+  }
+}

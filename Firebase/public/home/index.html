@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<title>Tele-Biosignal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href= "w3.css">
+<link rel="stylesheet" href= "dashborad/css/dropdown.css">
+
+<link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+
+
+<head>
+  <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-database.js"></script>
+
+  <script defer src="/__/firebase/8.2.3/firebase-app.js"></script>
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/8.6.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/8.6.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-firestore.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-functions.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-storage.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-analytics.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-remote-config.js"></script>
+  <script defer src="/__/firebase/8.6.1/firebase-performance.js"></script>
+  <!--
+  initialize the SDK after all desired features are loaded, set useEmulator to false
+  to avoid connecting the SDK to running emulators.
+  -->
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+
+  <script>
+    function checkuser(){
+
+      /*var admin = require('firebase-admin');
+      var firebaseConfig = {
+      apiKey: "AIzaSyBsVa9JJ29kNIVGBbfrNJfzzPyNwfrQo0w",
+      authDomain: "biosignal-stream.web.app",
+      databaseURL: "https://biosignal-stream-default-rtdb.firebaseio.com/",
+      projectId: "biosignal-stream",
+      storageBucket: "gs://biosignal-stream.appspot.com",
+      messagingSenderId: "488568613405",
+      appId: "1:488568613405:web:e621ba62457179f7aa74f4",
+      };
+
+      // Initialize Firebase
+      if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      }
+      else{firebase.app();}
+       */
+
+
+      const querytoken = window.location.search;
+      const urlParams = new URLSearchParams(querytoken);
+      const IdToken = urlParams.get("token");
+
+      firebase.auth().signInWithCustomToken(IdToken)
+      .then((userCredential) => {
+      // Signed in
+      var user = userCredential.user;
+      // ...
+      console.log(user);
+      })
+      .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+      console.log(error);
+      });
+
+
+      /*
+      admin.auth().verifyIdToken(IdToken).then(decodedIdToken => {
+      console.log('ID Token correctly decoded', decodedIdToken);
+      admin.auth().getUser(decodedIdToken.uid).then((userRecord) => {
+        return resolve(userRecord);
+      }).catch(error => {
+        console.error('Error while getting Firebase User record:', error);
+        return reject({code: 403, error: 'Unauthorized'});
+      });
+    })  */
+
+    }
+
+    document.ready = checkuser;
+  </script>
+
+</head>
+
+
+<body>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body {margin:0;}
+</style>
+
+
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding-small w3-card">
+      <a href="#home" class="w3-margin-bar w3-bar-item w3-button"><b>CMU</b> Tele-Biosignal</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <div class="dropdownhead">
+          <button class="w3-margin-bar w3-bar-item-wide w3-button">Department
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <br><br>
+          <div class="dropdownhead-content ">
+            <a href="#projects" >ICU Surgery</a>
+            <a href="#about">ICU MED</a>
+            <a href="#">Other</a>
+          </div>
+        </div>
+        <a href="https://biosignal-dashboard.web.app" class="w3-margin-bar w3-bar-item w3-button">Dashborad</a>
+        <a href="#contact" class="w3-margin-bar w3-bar-item w3-button">Contact</a>
+        <div  onclick="logout()" class="w3-margin-bar w3-bar-item w3-hover-text-gray" title="Log out">
+          | <span id="username"  ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      firebase.auth().signOut()
+              .then(() => {
+                window.open("https://biosignal-signin.web.app","_self")
+                console.log("Sign-out successful")
+                // Sign-out successful.
+              })
+              .catch((error) =>
+              {
+                 // An error happened.
+              });
+    }
+  </script>
+
+  <script>
+      function username() {
+        var user = firebase.auth().currentUser;
+        if (user != null) {
+          user.providerData.forEach(function (profile) {
+            console.log("  Email: " + profile.email);
+            var username = profile.email;
+            document.getElementById("username").innerHTML = username;
+          });
+        }
+        else
+        {
+          console.log("not done");
+          var username = "please sign in";
+          document.getElementById("username").innerHTML = username;
+        }
+      }
+      //window.onload = username;
+  </script>
+
+
+
+
+  <!-- Slideshow -->
+  <style>
+
+    /* The dots/bullets/indicators */
+    .dot {
+      height: 15px;
+      width: 15px;
+      margin: 0 2px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.6s ease;
+    }
+
+    .active {
+      background-color: #717171;
+    }
+
+    /* Fading animation */
+    .fade {
+      -webkit-animation-name: fade;
+      -webkit-animation-duration: 1.5s;
+      animation-name: fade;
+      animation-duration: 1.5s;
+    }
+
+    @-webkit-keyframes fade {
+      from {opacity: .4}
+      to {opacity: 1}
+    }
+
+    @keyframes fade {
+      from {opacity: .4}
+      to {opacity: 1}
+    }
+
+    /* On smaller screens, decrease text size */
+    @media only screen and (max-width: 300px) {
+      .text {font-size: 11px}
+    }
+    </style>
+    </head>
+    <body>
+
+
+  <header class="w3-display-container w3-content w3-wide" style="max-width:100%;" id="home">
+
+    <div class="mySlides fade">
+      <div class="w3-display-middle w3-margin-top w3-center">
+        <h1 class="w3-xxxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>MED</b></span> <span
+            class="w3-hide-small w3-text-light-grey">CMU</span></h1>
+      </div>
+      <img class="w3-image" src="img/test.png" alt="Architecture" width="100%" height="800">
+
+    </div>
+
+    <div class="mySlides fade">
+      <div class="w3-display-middle w3-margin-top w3-center">
+        <h1 class="w3-xxxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>MED</b></span> <span
+            class="w3-hide-small w3-text-light-grey">CMU</span></h1>
+      </div>
+      <img class="w3-image" src="img/test2.png" alt="Architecture" width="100%" height="800">
+    </div>
+
+    <div class="mySlides fade">
+      <div class="w3-display-middle w3-margin-top w3-center">
+        <h1 class="w3-xxxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>MED</b></span> <span
+            class="w3-hide-small w3-text-light-grey">CMU</span></h1>
+      </div>
+      <img class="w3-image" src="img/test3.png" alt="Architecture" width="100%" height="800">
+    </div>
+
+    </div>
+    <br>
+
+    <div style="text-align:center">
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+
+    <script>
+    var slideIndex = 0;
+    showSlides();
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n-1);
+    }
+
+    function showSlides() {
+      var i;
+      var slides = document.getElementsByClassName("mySlides");
+      var dots = document.getElementsByClassName("dot");
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slideIndex++;
+      if (slideIndex > slides.length) {slideIndex = 1}
+      for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+      }
+      slides[slideIndex-1].style.display = "block";
+      dots[slideIndex-1].className += " active";
+      setTimeout(showSlides, 10000); // Change image every _ seconds
+    }
+    </script>
+
+  </header>
+
+
+  <!-- Old Header
+  <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+    <img class="w3-image" src="img/test.png" alt="Architecture" width="1500"
+      height="800">
+    <div class="w3-display-middle w3-margin-top w3-center">
+      <h1 class="w3-xxxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>MED</b></span> <span
+          class="w3-hide-small w3-text-light-grey">CMU</span></h1>
+    </div>
+  </header>
+  -->
+
+
+
+  <!-- Page content -->
+  <div class="w3-content w3-padding" style="max-width:1564px; margin-left: 45px;">
+
+    <!-- ICU Surgery -->
+    <div class="w3-container w3-padding-32" id="projects">
+
+      <h3> <a href="https://biosignal-icu-sugery.web.app" title="ICU Surgery" target="_blank"
+                       class="w3-border-bottom w3-border-light-grey w3-padding-16 w3-hover-text-gray">ICU Surgery</a></h3>
+
+    </div>
+
+    <script src="https://github.com/protonet/jquery.inview/blob/master/jquery.inview.js"></script>
+    <script>
+    $('div').on('inview', function(event, isInView) {
+      if (isInView) {
+        // element is now visible in the viewport
+      } else {
+        // element has gone out of viewport
+      }
+    });
+    </script>
+
+  <!-- test video
+  <video width="320" controls autoplay muted>
+    <source src="file1.mp4" type="video/mp4">
+  </video>
+  -->
+
+    <!-- BED1 -->
+    <div class="w3-row-padding" >
+      <div class="ex1 w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+          <h3>BED1</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="max-width: 415%; margin: 0 auto;">
+            <video id="player11" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source id="isInView" src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+
+            var player11 = videojs('#player11');
+            player11.autoplay('muted');
+            player11.on('click', function () { player11.requestFullscreen(); });
+
+          </script>
+
+        </div>
+      </div>
+
+
+      <!-- BED2 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+          <h3>BED2</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player12" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player12 = videojs('#player12');
+            player12.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+      <!-- BED3 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED3</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player13" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player13 = videojs('#player13');
+            player13.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- BED4 -->
+    <div class="w3-row-padding">
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED4</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player14" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player14 = videojs('#player14');
+            player14.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED5 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED5</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player15" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player15 = videojs('#player15');
+            player15.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED6 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED6</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player16" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player16 = videojs('#player16');
+            player16.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+
+    <!-- Show -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("img").click(function () {
+          $("#fade").fadeToggle();
+          $("#panel").slideDown("slow");
+        });
+      });
+    </script>
+
+    <style>
+      #panel {
+        padding: 0;
+        display: none;
+      }
+    </style>
+
+    <div style="display: block;
+        margin-left: 47.5%;
+        margin-right: auto;">
+
+      <img id="fade" class="w3-image" src="img/down3.png" alt="Architecture"
+      width="25px" height="25px">
+
+    </div>
+
+
+    <!-- BED7 -->
+    <div class="w3-row-padding" id="panel">
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED7</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player17" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player17 = videojs('#player17');
+            player17.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED8 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED8</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player18" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player18 = videojs('#player18');
+            player18.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED9 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED9</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player19" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player19 = videojs('#player19');
+            player19.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <!-- ICU MED Section -->
+    <div class="w3-container w3-padding-32" id="about">
+      <h3> <a href="https://biosignal-icu-med.web.app" title="ICU MED" target="_blank"
+              class="w3-border-bottom w3-border-light-grey w3-padding-16 w3-hover-text-gray">ICU MED</a></h3>
+    </div>
+
+    <!-- BED1 -->
+    <div class="w3-row-padding">
+      <div class="w3-col l4 m6 w3-margin-bottom">
+
+        <h3>BED1</h3>
+        <p class="w3-opacity">Patient Name</p>
+
+        <div style="width: 415%; margin: 0 auto;">
+          <video id="player21" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+            <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+          </video>
+        </div>
+        <script>
+          var player21 = videojs('#player21');
+          player21.autoplay('muted');
+        </script>
+
+      </div>
+
+
+      <!-- BED2 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+          <h3>BED2</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player22" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player22 = videojs('#player22');
+            player22.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+      <!-- BED3 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED3</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player23" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player23 = videojs('#player23');
+            player23.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- BED4 -->
+    <div class="w3-row-padding">
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED4</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player24" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player24 = videojs('#player24');
+            player24.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED5 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED5</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player25" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player25 = videojs('#player25');
+            player25.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED6 -->
+      <div class="w3-col l4 m6 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3>BED6</h3>
+          <p class="w3-opacity">Patient Name</p>
+
+          <div style="width: 415%; margin: 0 auto;">
+            <video id="player26" class="video-js vjs-default-skin" width="415%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player26 = videojs('#player26');
+            player26.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="w3-container w3-padding-32" id="contact">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Contact</h3>
+      <p> Faculty of Medicine Chiang Mai University | MED CMU</p>
+      </form>
+    </div>
+
+    <!-- Image of location/map -->
+    <div class="w3-container">
+      <!--  <img src="file:///C:/Users/supha/Desktop/Web/test2.png" class="w3-image" style="width:30%">  -->
+    </div>
+
+    <!-- End page content -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-center w3-black w3-padding-smaller">
+    <p>Powered by <a href= "https://biosignal-dev.web.app" title="Development" target="_blank"
+        class="w3-hover-text-gray">REMY</a></p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<title>Tele-Biosignal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href= "w3.css">
+<link rel="stylesheet" href= "dashborad/css/dropdown.css">
+
+<link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+  body {margin:0;}
+</style>
+
+
+
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding-small w3-card">
+      <a href="https://biosignal-stream.web.app" class="w3-margin-bar w3-bar-item w3-button"><b>CMU</b> Tele-Biosignal</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <div class="dropdownhead">
+          <button class="w3-margin-bar w3-bar-item-wide w3-button">Department
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <br><br>
+          <div class="dropdownhead-content ">
+            <a href="https://biosignal-icu-sugery.web.app" >ICU Surgery</a>
+            <a href="#">ICU MED</a>
+            <a href="#">Other</a>
+          </div>
+        </div>
+        <a href="https://biosignal-dashboard.web.app" class="w3-margin-bar w3-bar-item w3-button">Dashboard</a>
+        <a href="https://biosignal-stream.web.app/#contact" class="w3-margin-bar w3-bar-item w3-button">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="w3-content w3-padding" style="max-width:1564px; margin-left: 50px; margin-right: -50px;">
+
+    <!-- ICU Surgery -->
+    <div class="w3-container w3-padding-32" id="projects">
+
+      <br/>
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16" style="font-weight: 400;" >ICU Surgery</h3>
+
+    </div>
+
+    <script src="https://github.com/protonet/jquery.inview/blob/master/jquery.inview.js"></script>
+    <script>
+    $('div').on('inview', function(event, isInView) {
+      if (isInView) {
+        // element is now visible in the viewport
+      } else {
+        // element has gone out of viewport
+      }
+    });
+    </script>
+
+  <!-- test video
+  <video width="320" controls autoplay muted>
+    <source src="file1.mp4" type="video/mp4">
+  </video>
+  -->
+
+    <script>
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+        title:{},
+        axisY:[{
+            title: "Heart Rate",
+            titleFontSize: 15,
+            labelFontSize: 15,
+            lineColor: "#FF0052",
+            tickColor: "#FF0052",
+            labelFontColor: "#FF0052",
+            titleFontColor: "#FF0052",
+            includeZero: true,
+            suffix: " bpm"
+        },
+        {
+            title: "Body Temperature",
+            titleFontSize: 15,
+            labelFontSize: 15,
+            lineColor: "#10A5F5",
+            tickColor: "#10A5F5",
+            labelFontColor: "#10A5F5",
+            titleFontColor: "#10A5F5",
+            includeZero: true,
+            suffix: " C"
+        }],
+        axisY2: {
+            title: "Blood Pressure",
+            titleFontSize: 15,
+            labelFontSize: 15,
+            lineColor: "#7F6084",
+            tickColor: "#7F6084",
+            labelFontColor: "#7F6084",
+            titleFontColor: "#7F6084",
+            includeZero: true,
+            suffix: " mmHg"
+        },
+        axisX:{
+            labelFontSize: 15,
+            labelAngle: 45
+         },
+        toolTip: {
+            shared: true
+        },
+        legend: {
+            cursor: "pointer",
+            fontSize: 15,
+            itemclick: toggleDataSeries
+        },
+        data: [{
+            type: "spline",
+            name: "Body Temperature",
+            color: "#10A5F5",
+            showInLegend: true,
+            axisYIndex: 1,
+            dataPoints: [
+                { x: new Date(0000,00,00,11), y: 36.5 },
+                { x: new Date(0000,00,00,12), y: 34.2 },
+                { x: new Date(0000,00,00,13), y: 36.7 },
+                { x: new Date(0000,00,00,14), y: 38.0 },
+                { x: new Date(0000,00,00,15), y: 38.0 },
+            ]
+        },
+        {
+            type: "spline",
+            name: "Heart rate",
+            color: "#FF0052",
+            axisYIndex: 0,
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(0000,00,00,11), y: 99 },
+                { x: new Date(0000,00,00,12), y: 80 },
+                { x: new Date(0000,00,00,13), y: 75 },
+                { x: new Date(0000,00,00,14), y: 84 },
+                { x: new Date(0000,00,00,15), y: 92 },
+
+            ]
+        },
+        {
+            type: "scatter",
+            name: "SBP",
+            color: "#7F6084",
+            axisYType: "secondary",
+            showInLegend: true,
+            markerType: "cross",
+            dataPoints: [
+                { x: new Date(0000,00,00,11), y: 110 },
+                { x: new Date(0000,00,00,12), y: 152 },
+                { x: new Date(0000,00,00,13), y: 124 },
+                { x: new Date(0000,00,00,14), y: 155 },
+                { x: new Date(0000,00,00,15), y: 144 },
+
+            ]
+        },
+        {
+            type: "scatter",
+            name: "DBP",
+            color: "#7F6084",
+            axisYType: "secondary",
+            showInLegend: true,
+            markerType: "triangle",
+            dataPoints: [
+                { x: new Date(0000,00,00,11), y: 80 },
+                { x: new Date(0000,00,00,12), y: 60 },
+                { x: new Date(0000,00,00,13), y: 90 },
+                { x: new Date(0000,00,00,14), y: 76 },
+                { x: new Date(0000,00,00,15), y: 70 },
+
+            ]
+        }]
+    });
+    chart.render();
+
+    function toggleDataSeries(e) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+        } else {
+            e.dataSeries.visible = true;
+        }
+        e.chart.render();
+    }
+
+    }
+    </script>
+
+
+
+    <!-- BED1 -->
+    <div class="w3-row-padding" >
+      <div class="ex1 w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <div class="popup" id="popup-1">
+            <div class="overlay"></div>
+            <div class="content">
+              <div class="close-btn" onclick="togglePopup()">×</div>
+              <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+              <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>  </div>
+          </div>
+
+          <h3 onclick="togglePopup()" class="w3-hover-text-gray" style="font-weight: 400;" >BED1</h3>
+
+          <script>
+          function togglePopup(){
+            document.getElementById("popup-1").classList.toggle("active");
+          }
+          </script>
+
+
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="max-width: 630%; margin: 0 auto;">
+            <video id="player11" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source id="isInView" src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+
+            var player11 = videojs('#player11');
+            player11.autoplay('muted');
+            player11.on('click', function () { player11.requestFullscreen(); });
+
+          </script>
+
+        </div>
+      </div>
+
+
+      <!-- BED2 -->
+      <div class="w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+          <h3 style="font-weight: 400;" >BED2</h3>
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="width: 630%; margin: 0 auto;">
+            <video id="player12" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player12 = videojs('#player12');
+            player12.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+      <!-- BED3 -->
+      <div class="w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3 style="font-weight: 400;" >BED3</h3>
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="width: 630%; margin: 0 auto;">
+            <video id="player13" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player13 = videojs('#player13');
+            player13.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+      <!-- BED4 -->
+      <div class="w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+          <h3 style="font-weight: 400;" >BED4</h3>
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="width: 630%; margin: 0 auto;">
+            <video id="player14" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player14 = videojs('#player14');
+            player14.autoplay('muted');
+          </script>
+
+        </div>
+      </div>
+
+    <!-- BED5 -->
+    <div class="w3-col l6 m8 w3-margin-bottom">
+      <div class="w3-display-container">
+
+
+        <h3 style="font-weight: 400;" >BED5</h3>
+        <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+        <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+        <div style="width: 630%; margin: 0 auto;">
+          <video id="player15" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+            <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+          </video>
+        </div>
+        <script>
+          var player15 = videojs('#player15');
+          player15.autoplay('muted');
+        </script>
+
+
+      </div>
+    </div>
+
+    <!-- BED6 -->
+    <div class="w3-col l6 m8 w3-margin-bottom">
+      <div class="w3-display-container">
+
+
+        <h3 style="font-weight: 400;" >BED6</h3>
+        <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+        <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+        <div style="width: 630%; margin: 0 auto;">
+          <video id="player16" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+            <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+          </video>
+        </div>
+        <script>
+          var player16 = videojs('#player16');
+          player16.autoplay('muted');
+        </script>
+
+      </div>
+    </div>
+
+
+    <!-- BED7 -->
+    <div class="w3-row-padding" id="panel">
+      <div class="w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3 style="font-weight: 400;" >BED7</h3>
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="width: 630%; margin: 0 auto;">
+            <video id="player17" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player17 = videojs('#player17');
+            player17.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED8 -->
+      <div class="w3-col l6 m8 w3-margin-bottom">
+        <div class="w3-display-container">
+
+
+          <h3 style="font-weight: 400;" >BED8</h3>
+          <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+          <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+          <div style="width: 630%; margin: 0 auto;">
+            <video id="player18" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+              <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+            </video>
+          </div>
+          <script>
+            var player18 = videojs('#player18');
+            player18.autoplay('muted');
+          </script>
+
+
+        </div>
+      </div>
+
+      <!-- BED9 -->
+      <div class="w3-row-padding" id="panel">
+        <div class="w3-col l6 m8 w3-margin-bottom">
+          <div class="w3-display-container">
+
+
+            <h3 style="font-weight: 400;" >BED9</h3>
+            <p class="w3-opacity" style="font-size: 18px;" >Patient Name : <br/> Diagnosis :</p>
+            <p class="w3-opacity-min w3-text-red" style="font-size: 18px;" ><b>Alarm :</b></p>
+
+            <div style="width: 630%; margin: 0 auto;">
+              <video id="player19" class="video-js vjs-default-skin" width="630%" controls preload="auto">
+                <source src="http://110.238.114.246:8090/hls/medcmu.m3u8" type="application/x-mpegURL" />
+              </video>
+            </div>
+            <script>
+              var player19 = videojs('#player19');
+              player19.autoplay('muted');
+            </script>
+
+
+          </div>
+       </div>
+    </div>
+  </div>
+
+
+
+
+
+

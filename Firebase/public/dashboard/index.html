@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<title>Tele-Biosignal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href= "w3.css">
+<link rel="stylesheet" href= "dashborad/css/dropdown.css">
+
+
+<link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/7.5.5/video.js"></script>
+
+<--! dashborad -->
+<link href="dashborad/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="dashborad/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="dashborad/css/ruang-admin.min.css" rel="stylesheet">
+
+
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+  body {margin:0;}
+</style>
+
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding-small w3-card">
+      <a href="https://biosignal-stream.web.app" class="w3-margin-bar w3-bar-item w3-button" style="text-decoration:none;"  ><b>CMU</b> Tele-Biosignal</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <div class="dropdownhead">
+          <button class="w3-margin-bar w3-bar-item-wide w3-button">Department
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <br><br>
+          <div class="dropdownhead-content ">
+            <a href="https://biosignal-icu-sugery.web.app" >ICU Surgery</a>
+            <a href="#">ICU MED</a>
+            <a href="#">Other</a>
+          </div>
+        </div>
+        <a href="https://biosignal-dashboard.web.app" class="w3-margin-bar w3-bar-item w3-button" style="text-decoration:none;" >Dashboard</a>
+        <a href="https://biosignal-stream.web.app/#contact" class="w3-margin-bar w3-bar-item w3-button" style="text-decoration:none;"  >Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="w3-content w3-padding" style="max-width:1564px; margin-left: 50px; margin-right: -50px;">
+
+    <!-- Dashborad -->
+    <div class="w3-container w3-padding-32" id="projects">
+      <br/>
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16" style="font-weight: 400;" >Dashborad</h3>
+      <br/>
+      <div class="row mb-3">
+        <!-- Donut Chart -->
+        <div class="col-lg-4">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Number of monitor</h6>
+            </div>
+            <div class="card-body">
+              <div class="chart-pie pt-4">
+                <canvas id="myPieChart"></canvas>
+              </div>
+              <hr>
+              Total monitor : <code>29</code> beds.
+            </div>
+          </div>
+        </div>
+
+        <script src="dashborad/js/jquery.min.js"></script>
+        <script src="dashborad/js/bootstrap.bundle.min.js"></script>
+        <script src="dashborad/js/jquery.easing.min.js"></script>
+        <script src="dashborad/js/ruang-admin.min.js"></script>
+        <script src="dashborad/js/Chart.min.js"></script>
+        <script src="dashborad/js/chart-pie-demo.js"></script>
+
+
+
+        <!-- Active monitor -->
+        <div class="col-xl-7 col-lg-5">
+          <div class="card mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Active</h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="small text-gray-500">ICU Surgery
+                  <div class="small float-right"><b>9 of 9 Beds</b></div>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="small text-gray-500">ICU MED
+                  <div class="small float-right"><b>6 of 6 Beds</b></div>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="small text-gray-500">Sub ICU
+                  <div class="small float-right"><b>5 of 10 Beds</b></div>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-danger" role="progressbar" style="width: 50%" aria-valuenow="50"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="small text-gray-500">SubICU Trauma
+                  <div class="small float-right"><b>8 of 10 Beds</b></div>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="small text-gray-500">Other
+                  <div class="small float-right"><b>1 of 10 Beds</b></div>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-dark" role="progressbar" style="width: 10%" aria-valuenow="10"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <a class="m-0 small text-primary card-link" href="#">View More <i
+                  class="fa fa-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alarm -->
+      <div class="row mb-3">
+        <div class="col-xl-8 col-lg-7 mb-4">
+          <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary"> Alarm</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                  aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header" style="font-size: 120%">WARD :</div>
+                  <a class="dropdown-item" href="#">ICU Surgery</a>
+                  <a class="dropdown-item" href="#">ICU MED</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Other</a>
+                </div>
+              </div>
+
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th>WARD</th>
+                    <th>HN</th>
+                    <th>Name</th>
+                    <th>Alarm</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ICU Surgery</td>
+                    <td><a href="#">RA0449</a></td>
+                    <td>Udin Wayang</td>
+                    <td>BP shoot</td>
+                    <td><span class="badge badge-success">stable</span></td>
+                  </tr>
+                  <tr>
+                    <td>ICU Surgery</td>
+                    <td><a href="#">RA5324</a></td>
+                    <td>Jaenab Bajigur</td>
+                    <td>Bradycardia</td>
+                    <td><span class="badge badge-warning">Warning</span></td>
+                  </tr>
+                  <tr>
+                    <td>ICU MED</td>
+                    <td><a href="#">RA8568</a></td>
+                    <td>Rivat Mahesa</td>
+                    <td>BP drop</td>
+                    <td><span class="badge badge-danger">Danger</span></td>
+                  </tr>
+                  <tr>
+                    <td>ICU MED</td>
+                    <td><a href="#">RA1453</a></td>
+                    <td>Indri Junanda</td>
+                    <td>Arrest</td>
+                    <td><span class="badge badge-info">Resus</span></td>
+                  </tr>
+                  <tr>
+                    <td>ICU MED</td>
+                    <td><a href="#">RA1998</a></td>
+                    <td>Udin Cilok</td>
+                    <td>Hyperthermia</td>
+                    <td><span class="badge badge-success">Stable</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- Message From Customer-->
+        <div class="col-xl-3 col-lg-5 ">
+          <div class="card">
+            <div class="card-header py-3 bg-primary d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-light">News Update</h6>
+            </div>
+            <div>
+              <div class="customer-message align-items-center">
+                <a class="font-weight-bold" href="#">
+                  <div class="text-truncate message-title">New dashborad tabs</div>
+                  <div class="small text-gray-500 message-time font-weight-bold">8 MAY 2021</div>
+                </a>
+              </div>
+              <div class="customer-message align-items-center">
+                <a href="#">
+                  <div class="text-truncate message-title">Update ward monitor </div>
+                  <div class="small text-gray-500 message-time">7 MAY 2021</div>
+                </a>
+              </div>
+              <div class="customer-message align-items-center">
+                <a class="font-weight-bold" href="#">
+                  <div class="text-truncate message-title">Update home </div>
+                  <div class="small text-gray-500 message-time font-weight-bold">6 MAY 2021</div>
+                </a>
+              </div>
+                </a>
+              </div>
+              <div class="card-footer text-center">
+                <a class="m-0 small text-primary card-link" href="#">View More <i
+                    class="fa fa-chevron-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
