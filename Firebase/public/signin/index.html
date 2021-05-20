@@ -91,8 +91,15 @@
 			// The signed-in user info.
 			var user = result.user;
 			console.log(user);
-			console.log(user.displayName);
-			window.open("https://biosignal-stream.web.app?token="+token,"_self")
+			//window.open("https://biosignal-stream.web.app?token="+token,"_self")
+			if (user) {
+			 user.getIdToken().then(function(idToken) {
+				console.log(idToken);
+				//window.open("http://localhost:5000?token="+idToken,"_self")
+				window.open("https://biosignal-stream.web.app?token="+token,"_self")
+			 });
+		  }
+			
 			});
 		}
     </script>
