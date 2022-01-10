@@ -1,4 +1,5 @@
-# icu_biosignal
+# ICU Surgery Biosignal Streaming Application
+## Faculty of Medicine, Chiang Mai University
 **Privacy Policy**
 
 Piyapong Khumrin built the ICU signal app as a Free app. This SERVICE is
